@@ -1,4 +1,5 @@
-EXP_GROUPS = {'AWSDR_SDx2_edgar': [{"dataset": {
+# Each experiment is a list of dictionaries, they are excuted sequentially in a workstation or in parallel in a cluster
+EXP_GROUPS = {'AWSDR_SDx2_edgar': [{"dataset": { 
                                 "lr_type": "LR_bicubic",
                                 "data_dir": "/mnt/datasets/public/research/pau/superresolution/",
                                 "data_train": "DIV2K",
