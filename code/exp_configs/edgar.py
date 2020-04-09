@@ -40,6 +40,7 @@ EXP_GROUPS = {'AWSDR_SDx2_edgar': [{"dataset": {
                         "period": 1000, #lr restarting period
                         "gamma": 0.5, # lr decay 
                         "optimizer": "ADAM",
-                        "loss": "L1",
+                        "loss_l1_weight": 1,
+                        "loss_sobel_weight": 0, #TODO edgar
                         "skip_threshold": 1e6, #skipping batch that has large error
                     }]}

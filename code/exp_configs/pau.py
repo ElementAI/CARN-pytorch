@@ -35,6 +35,8 @@ EXP_GROUPS = {'AWSDR_SDx2': [{"dataset": {
                         "split_batch": 1,
                         "test_only": False,
                         "gan_k": 1,
+                        "loss_l1_weight": 1,
+                        "loss_sobel_weight": 0,
                         "lr": 1e-3,
                         "lr_decay": 200,
                         "period": 1000, #lr restarting period

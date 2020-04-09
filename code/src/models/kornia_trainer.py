@@ -39,7 +39,10 @@ class Trainer():
 
             self.optimizer.zero_grad()
             sr = self.backbone(lr, 0)
-            loss = F.l1_loss(sr, hr)
+            loss = F.l1_loss(sr, hr) * self.exp_dict["loss_l1_weight"]
+            # TODO: @erriba
+            if self.exp_dict["loss_sobel_weight"] > 1:
+                raise NotImplementedError
 
             loss.backward()
             losses.append(float(loss))
