@@ -1,7 +1,7 @@
 import os
 
-from data import common
-from data import srdata
+from . import common
+from . import srdata
 
 import numpy as np
 

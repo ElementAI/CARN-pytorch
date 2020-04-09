@@ -4,17 +4,25 @@ import numpy as np
 import skimage.color as sc
 
 import torch
-from torchvision import transforms
 
-def get_patch(*args, patch_size=96, scale=1, multi_scale=False):
+def get_patch(*args, patch_size=96, scale=2, multi=False, input_large=False):
     ih, iw = args[0].shape[:2]
-    p = scale if multi_scale else 1
-    tp = p * patch_size
-    ip = tp // scale
+
+    if not input_large:
+        p = scale if multi else 1
+        tp = p * patch_size
+        ip = tp // scale
+    else:
+        tp = patch_size
+        ip = patch_size
 
     ix = random.randrange(0, iw - ip + 1)
     iy = random.randrange(0, ih - ip + 1)
-    tx, ty = scale * ix, scale * iy
+
+    if not input_large:
+        tx, ty = scale * ix, scale * iy
+    else:
+        tx, ty = ix, iy
 
     ret = [
         args[0][iy:iy + ip, ix:ix + ip, :],
@@ -33,6 +41,7 @@ def set_channel(*args, n_channels=3):
             img = np.expand_dims(sc.rgb2ycbcr(img)[:, :, 0], 2)
         elif n_channels == 3 and c == 1:
             img = np.concatenate([img] * n_channels, 2)
+
         return img
 
     return [_set_channel(a) for a in args]
@@ -40,7 +49,6 @@ def set_channel(*args, n_channels=3):
 def np2Tensor(*args, rgb_range=255):
     def _np2Tensor(img):
         np_transpose = np.ascontiguousarray(img.transpose((2, 0, 1)))
-        np_transpose = np_transpose.astype(np.float32)
         tensor = torch.from_numpy(np_transpose).float()
         tensor.mul_(rgb_range / 255)
 
@@ -61,4 +69,3 @@ def augment(*args, hflip=True, rot=True):
         return img
 
     return [_augment(a) for a in args]
-

@@ -2,7 +2,7 @@ import os
 import math
 from decimal import Decimal
 
-import utility
+from . import utility
 
 import torch
 from torch.autograd import Variable
