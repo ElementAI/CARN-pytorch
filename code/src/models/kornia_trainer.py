@@ -5,13 +5,16 @@ from decimal import Decimal
 from . import utility
 from src import backbones
 
+from tqdm import tqdm
+
 import torch
 from torch.autograd import Variable
-from tqdm import tqdm
 import torch.nn.utils as utils
 from torch.optim import Adam
 import torch.nn.functional as F
+
 import numpy as np
+import kornia as K
 
 class Trainer():
     def __init__(self, exp_dict):
@@ -40,9 +43,16 @@ class Trainer():
             self.optimizer.zero_grad()
             sr = self.backbone(lr, 0)
             loss = F.l1_loss(sr, hr) * self.exp_dict["loss_l1_weight"]
-            # TODO: @erriba
-            if self.exp_dict["loss_sobel_weight"] > 1:
-                raise NotImplementedError
+            print(loss.item())
+
+            if self.exp_dict["loss_sobel_weight"] > 0:
+                # https://kornia.readthedocs.io/en/latest/filters.html#kornia.filters.sobel
+                # normalized is True by default
+                sr_sobel = K.sobel(sr, normalized=True)
+                hr_sobel = K.sobel(hr, normalized=True)
+                loss_sobel = F.l1_loss(sr_sobel, hr_sobel) * self.exp_dict["loss_sobel_weight"]
+                loss += loss_sobel
+                print(loss_sobel.item())
 
             loss.backward()
             losses.append(float(loss))
